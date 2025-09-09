@@ -7,7 +7,7 @@ const http = require('http');
 // Function to fetch OpenAPI spec from live NestJS application
 async function fetchLiveOpenApiSpec() {
   return new Promise((resolve, reject) => {
-    const req = http.get('http://localhost:3000/docs-json', (res) => {
+    const req = http.get('http://54.226.212.22:3000/docs-json', (res) => {
       let data = '';
       
       res.on('data', (chunk) => {
