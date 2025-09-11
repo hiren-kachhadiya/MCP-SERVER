@@ -220,4 +220,15 @@ export class OrdersController {
       estimatedDelivery: new Date('2024-01-20T00:00:00Z')
     };
   }
+
+  // orders.controller.ts me add karo
+@Get('test-realtime')
+@ApiOperation({ summary: 'Test realtime notifications' })
+testRealtime() {
+  return {
+    message: 'This is a test endpoint for realtime notifications',
+    timestamp: new Date().toISOString(),
+    version: '1.1.0'
+  };
+}
 }
