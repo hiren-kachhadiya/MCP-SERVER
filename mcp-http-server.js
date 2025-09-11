@@ -110,7 +110,7 @@ async function searchApiEndpoints(query, limit = 10) {
             method: method.toUpperCase(),
             path: path,
             summary: details.summary || 'No description',
-            requestBody: details.requestBody ? getSchemaName(details.requestBody) : '—',
+            requestBody: getSchemaName(details.requestBody),
             response: getResponseSchema(details.responses),
             tags: details.tags || []
           });
