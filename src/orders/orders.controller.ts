@@ -200,7 +200,7 @@ export class OrdersController {
     };
   }
 
-  @Get(':id/status')
+  @Get(':id/statusABC')
   @ApiOperation({ summary: 'Get order status' })
   @ApiParam({ name: 'id', description: 'Order ID' })
   @ApiResponse({ 

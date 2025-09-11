@@ -100,3 +100,4 @@ For production environments, consider:
 2. **Use Application Load Balancer**: Route traffic through ALB
 3. **Enable HTTPS**: Use SSL certificates for encrypted communication
 4. **VPC Configuration**: Place services in private subnets with NAT Gateway
+

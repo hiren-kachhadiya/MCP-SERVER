@@ -131,3 +131,4 @@ print_success "🚀 Deployment update completed successfully!"
 print_status "📋 Check PM2 logs: pm2 logs"
 print_status "🔄 Restart services: pm2 restart all"
 print_status "⏹️  Stop services: pm2 stop all"
+
