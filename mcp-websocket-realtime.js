@@ -21,7 +21,7 @@ const CONFIG = {
   wsPort: 5001,
   pollInterval: 15000, // 15 seconds for faster detection
   apiBaseUrl: process.env.API_BASE_URL || 'http://localhost:3000',
-  enableNotifications: process.env.ENABLE_NOTIFICATIONS !== 'false'
+  enableNotifications: true
 };
 
 // Initialize MCP server
