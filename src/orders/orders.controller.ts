@@ -221,14 +221,28 @@ export class OrdersController {
     };
   }
 
-  // orders.controller.ts me add karo
-@Get('test-realtime')
-@ApiOperation({ summary: 'Test realtime notifications' })
-testRealtime() {
-  return {
-    message: 'This is a test endpoint for realtime notifications',
-    timestamp: new Date().toISOString(),
-    version: '1.1.0'
-  };
-}
+  @Get('test-notification')
+  @ApiOperation({ summary: 'Test realtime notification system' })
+  @ApiResponse({ status: 200, description: 'Test endpoint for notifications' })
+  testNotification() {
+    return {
+      message: 'Testing realtime notifications locally!',
+      timestamp: new Date().toISOString(),
+      version: '2.0.0',
+      endpoint: 'test-notification'
+    };
+  }
+
+  @Get('test-notification-2')
+  @ApiOperation({ summary: 'Second test endpoint for notifications' })
+  @ApiResponse({ status: 200, description: 'Another test endpoint' })
+  testNotification2() {
+    return {
+      message: 'Second test endpoint added!',
+      timestamp: new Date().toISOString(),
+      version: '2.1.0',
+      endpoint: 'test-notification-2'
+    };
+  }
+
 }

@@ -207,13 +207,25 @@ function startSchemaPolling() {
 // Check for schema changes and broadcast real-time
 async function fetchAndCheckSchema() {
   try {
+    console.log('🔄 Checking for schema changes...');
     const newSchema = await fetchLiveOpenApiSpec();
-    const newHash = generateSchemaHash(newSchema);
     
-    if (lastSchemaHash && newHash !== lastSchemaHash) {
+    if (!newSchema || !newSchema.paths) {
+      console.log('⚠️ No valid schema received');
+      return;
+    }
+    
+    const newHash = generateSchemaHash(newSchema);
+    console.log(`🔍 Current hash: ${newHash.substring(0, 8)}...`);
+    console.log(`🔍 Last hash: ${lastSchemaHash ? lastSchemaHash.substring(0, 8) + '...' : 'none'}`);
+    
+    // Always detect changes if we have both schemas
+    if (lastSchemaHash && lastSchema) {
       const changes = detectSchemaChanges(lastSchema, newSchema);
+      console.log(`🔍 Detected ${changes.length} changes`);
       
-      if (changes.length > 0) {
+      // Check if hash is different OR if we found actual changes
+      if (newHash !== lastSchemaHash || changes.length > 0) {
         console.log(`🔄 Schema changes detected: ${changes.length} changes`);
         
         const notification = {
@@ -234,11 +246,18 @@ async function fetchAndCheckSchema() {
         changes.forEach(change => {
           console.log(`  📝 ${change.type}: ${change.method} ${change.path}`);
         });
+      } else {
+        console.log('✅ No changes detected');
       }
+    } else {
+      console.log('🔄 First schema load - setting baseline');
     }
     
+    // Always update the stored schema and hash
     lastSchemaHash = newHash;
     lastSchema = newSchema;
+    console.log(`💾 Updated baseline hash: ${newHash.substring(0, 8)}...`);
+    
   } catch (error) {
     console.error('⚠️ Failed to check schema changes:', error.message);
   }
@@ -271,10 +290,34 @@ function broadcastToAllClients(notification) {
   console.log(`📢 Real-time notification sent to ${broadcastCount} clients`);
 }
 
-// Generate schema hash
+// Generate schema hash - Focus on paths only for better change detection
 function generateSchemaHash(schema) {
-  const schemaString = JSON.stringify(schema, Object.keys(schema).sort());
-  return crypto.createHash('md5').update(schemaString).digest('hex');
+  if (!schema || !schema.paths) {
+    return crypto.createHash('md5').update('empty-schema').digest('hex');
+  }
+  
+  // Create a simplified hash based on paths and methods only
+  const pathsData = {};
+  
+  Object.keys(schema.paths).forEach(path => {
+    pathsData[path] = {};
+    Object.keys(schema.paths[path]).forEach(method => {
+      const operation = schema.paths[path][method];
+      pathsData[path][method] = {
+        summary: operation.summary || '',
+        description: operation.description || '',
+        tags: operation.tags || [],
+        operationId: operation.operationId || ''
+      };
+    });
+  });
+  
+  // Sort keys for consistent hashing
+  const sortedPathsString = JSON.stringify(pathsData, Object.keys(pathsData).sort());
+  const hash = crypto.createHash('md5').update(sortedPathsString).digest('hex');
+  
+  console.log(`🔍 Generated hash: ${hash.substring(0, 8)}... for ${Object.keys(schema.paths || {}).length} paths`);
+  return hash;
 }
 
 // Detect schema changes
