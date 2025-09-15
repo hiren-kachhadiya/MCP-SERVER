@@ -245,16 +245,5 @@ export class OrdersController {
     };
   }
 
-  @Get('test-notification-3')
-  @ApiOperation({ summary: 'Third test endpoint - LIVE NOTIFICATION TEST' })
-  @ApiResponse({ status: 200, description: 'Live notification test' })
-  testNotification3() {
-    return {
-      message: 'LIVE NOTIFICATION TEST - Third endpoint!',
-      timestamp: new Date().toISOString(),
-      version: '3.0.0',
-      endpoint: 'test-notification-3',
-      status: 'NOTIFICATION_TRIGGERED'
-    };
-  }
+  
 }
